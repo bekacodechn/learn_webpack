@@ -418,3 +418,37 @@ app.use(async (req, res, next) => {
 `<link charset="utf-8" rel="preload" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
 `<link rel="prefetch" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
 
+## Bundle Analysis 捆绑分析
+
+开始拆分代码后，分析输出以检查模块的最终位置会很有用。
+
+1. [官方分析工具](https://github.com/webpack/analyse)
+2. [webpack-chart](https://alexkuz.github.io/webpack-chart/)：webpack 统计信息的交互式饼图。
+3. [webpack-visualizer](https://github.com/webpack-contrib/webpack-bundle-analyzer)：可视化和分析您的捆绑包，以查看哪些模块占用了空间，哪些模块可能是重复的。
+4. [webpack bundle optimize helper](https://webpack.jakoblind.no/optimize)：此工具将分析您的捆绑包，并为您提供可操作的建议，说明需要改进哪些方面以减小捆绑包大小。
+5. [bundle-stats](https://github.com/bundle-stats/bundle-stats)：生成捆绑包报告（捆绑包大小、资产、模块）并比较不同构建之间的结果。
+6. [webpack-stats-viewer](https://github.com/moonrailgun/webpack-stats-viewer)：一个用于构建 webpack stats 的插件。显示有关 webpack bundle 详细信息的更多信息。
+
+`module`、`chunk`、`bundle` 的区别：
+
+1. `module（模块）`: 代码的最小单位，可以是  `js`文件、`css`文件、`image`文件等。在`Webpack`中，任何一个独立的文件都可以被视为模块。
+
+    特征：
+   - 模块是 Webpack 打包过程中的基本构建单元。
+   - 每个模块只会加载一次，并且在需要时可以被多个地方引用。
+   - Webpack 使用模块加载器（loaders）来处理不同类型的文件，比如 babel-loader 处理 JavaScript 文件，css-loader 处理 CSS 文件。
+
+2. `chunk（代码块）`: 由 `Webpack` 生成的一组模块的集合，通常是在打包过程中按需拆分出来的，以便于懒加载或按需加载。
+
+    特征：
+   - 一个 chunk 可以包含多个模块。
+   - Webpack 可以根据配置将代码分割成多个 chunk，以实现按需加载、代码拆分等功能，如`entry point`、`splitchunksplugin`、`import()`等
+   - **不会初始加载，即不会直接在`index.html`引入，根据需要动态加载。**
+  
+3. `bundle（包）`: 由 `Webpack` 输出的最终文件，即打包后的文件。它是由一个或多个 `chunk` 组成的，可以被`index.html`加载运行。
+
+    特征：
+    -  每个 `bundle` 通常是一个 `js`文件，但也可以包括其他类型的文件（如`css`）。
+    -  `Webpack` 会将所有的 `chunk` 合并并生成最终的 `bundle`。
+    -  **会初始加载，即在`index.html`直接引入。**
+

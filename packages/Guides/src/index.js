@@ -1,5 +1,4 @@
 async function getComponent() {
-  import("./a.js");
   return import("lodash")
     .then(({ default: _ }) => {
       const element = document.createElement("div");
