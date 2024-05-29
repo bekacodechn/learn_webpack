@@ -7,9 +7,12 @@
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
-    "server": "node ./server.js"
+    "server": "nodemon ./server.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "share": "workspace:^"
+  }
 }

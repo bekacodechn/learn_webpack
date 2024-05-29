@@ -366,3 +366,55 @@ getComponent().then((component) => {
 ```
 
 `5s`后动态加载`lodash`，可在代码之后后到`Elements devtool`，并在`<head> element`执行`Break on > subtree modifications`查看查看/移除过程。
+
+## [Prefetching/Preloading modules](https://webpack.js.org/guides/code-splitting/#prefetchingpreloading-modules)
+
+`Resource Hint`：
+
+- **prefetch**: resource is probably needed for some navigation in the future（导航后使用，空闲时加载，`fetchPriority`为最低）
+- **preload**: resource will also be needed during the current navigation（本次导航就要使用，立即加载，`fetchPriority`为中）
+
+举例说明：
+
+在`index.js`导入`a.js`，在`a.js`导入`b.js`，导入关系为： `index.js` -> `a.js` -> `b.js`
+
+`a.js`内容：
+```js
+import(/*webpackPreload: true */ "./b.js");
+
+// import(/*webpackPrefetch: true */ "./b.js");
+```
+
+`b.js`内容：
+```js
+console.log('b')
+```
+
+修改`server.js`， 加载`a.js`时延迟`3s`，通过`nodemon server.js`启动服务，在`network devtool`观察`preload`和`prefetch`的区别
+
+```js
+// 添加如下内容
+app.use(async (req, res, next) => {
+  const { url } = req;
+  if (url === "/src_a_js.bundle.js") {
+    const { sleep } = await import("share");
+    await sleep(3000);
+  }
+  next();
+});
+```
+
+`a.js`使用`import(/*webpackPreload: true */ "./b.js");`时，`a.js`和`b.js`并行加载。
+`a.js`使用`import(/*webpackPrefetch: true */ "./b.js");`时，`a.js`加载完才开始加载`b.js`。
+
+`preload / prefetch`总结：
+
+1. 加载时机不同。如果`a.js`使用`webpackPreload`动态导入`b.js`，则在加载`a.js`时并行加载`b.js`；使用`webpackPrefetch`，则加载完`a.js`后加载`b.js`
+2. `preload`的`chunk`具有中等优先级，并立即下载。在浏览器空闲时下载`fetch`的`chunk`。
+
+原理：
+
+动态添加`link`，但和`import("./b.js");`不同，不会在`b.js`执行完后删除标签。
+`<link charset="utf-8" rel="preload" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
+`<link rel="prefetch" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
+

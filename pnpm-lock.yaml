@@ -58,9 +58,15 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
 
-  packages/Guides: {}
+  packages/Guides:
+    dependencies:
+      share:
+        specifier: workspace:^
+        version: link:../share
 
   packages/course_1: {}
+
+  packages/share: {}
 
 packages:
 

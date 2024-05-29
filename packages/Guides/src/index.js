@@ -1,7 +1,5 @@
-const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
-
 async function getComponent() {
-  await sleep(5000);
+  import("./a.js");
   return import("lodash")
     .then(({ default: _ }) => {
       const element = document.createElement("div");
