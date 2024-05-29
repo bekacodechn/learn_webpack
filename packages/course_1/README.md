@@ -40,3 +40,31 @@ https://webpack.js.org/guides/getting-started/#npm-scripts
 [自定义 JSON 模块的解析器](https://webpack.js.org/guides/asset-management/#customize-parser-of-json-modules)
 
 可以使用自定义解析器而不是特定的 webpack 加载器将任何 `toml`，`yaml` 或 `json5` 文件导入为 `JSON` 模块。
+
+# Output Management
+
+https://webpack.js.org/guides/output-management/
+
+## Preparation
+
+```js
+  entry: {
+    index: './src/index.js',
+    print: './src/print.js',
+  },
+  output: {
+    filename: '[name].bundle.js',
+     path: path.resolve(__dirname, 'dist'),
+   },
+```
+
+并在`index.js`里通过`import printMe from "./print.js";`使用了`print.js`
+
+1. 打包生成两个文件，但是没有懒加载，因此`index.html`会发起对`index.bundle.js`和`print.bundle.js`的请求。
+2. `print`的打包结果优点奇怪：
+
+```js
+(()=>{"use strict"})();
+```
+
+函数内的内容都被打包进了`index.js`里，`print.bundle.js`里只剩了空函数。

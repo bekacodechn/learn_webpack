@@ -4,10 +4,13 @@ const path = require("path");
  * @type { import("webpack").Configuration }
  */
 const config = {
-  entry: "./src/index.js",
+  entry: {
+    index: "./src/index.js",
+    print: "./src/print.js",
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
   },
 };
 
