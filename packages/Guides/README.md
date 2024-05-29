@@ -75,3 +75,16 @@ https://webpack.js.org/guides/output-management/
 `html-webpack-plugin`
 
 默认将所有`bundle`加入到生成的`html`中并为`script`添加`defer`
+
+## Cleaning up the /dist folder
+
+```js
+output: {
+  // ..
+  clean: true
+}
+```
+
+## The Manifest
+
+[WebpackManifestPlugin](https://github.com/shellscape/webpack-manifest-plugin)生成`bundle`清单到`output`

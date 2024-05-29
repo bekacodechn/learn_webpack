@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 /**
  * @type { import("webpack").Configuration }
@@ -17,6 +18,9 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       title: "Output Management",
+    }),
+    new WebpackManifestPlugin({
+      basePath: "./aa",
     }),
   ],
 };
