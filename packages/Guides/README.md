@@ -98,3 +98,15 @@ output: {
 为了更容易地跟踪错误和警告，`JavaScript` 提供了[source maps](http://blog.teamtreehouse.com/introduction-source-maps)，将编译后的代码映射回原始源代码。如果错误源自 `b.js` ，`source map`将准确地告诉你位置。
 
 在开发环境中，使用`inline-source-map`
+
+## [Choosing a Development Tool](https://webpack.js.org/guides/development/#using-source-maps)
+
+1. webpack's Watch Mode
+2. webpack-dev-server
+3. webpack-dev-middleware
+
+### Using Watch Mode
+
+webpack “监视”依赖关系图中的所有文件是否有更改。如果更新了其中一个文件，则代码将重新编译，因此再执行`webpack build`
+
+缺点：需要手动刷新页面。
