@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      find-lowest-common-ancestor:
+        specifier: ^0.0.3
+        version: 0.0.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1197,6 +1200,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /find-lowest-common-ancestor@0.0.3:
+    resolution: {integrity: sha512-KOYSCM+ecCl4dTwJyhSAOQh8JOQ/ROoUOk/bd7tw6yStC7bNWo6rdqhl/SXziw6QD8GJJktIiuFZvg4X416NBg==}
+    dev: false
 
   /find-up@4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}

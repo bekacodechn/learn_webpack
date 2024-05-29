@@ -27,6 +27,7 @@
     "yamljs": "^0.3.0"
   },
   "dependencies": {
+    "find-lowest-common-ancestor": "^0.0.3",
     "lodash": "^4.17.21"
   }
 }

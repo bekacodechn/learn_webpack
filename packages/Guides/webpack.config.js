@@ -8,8 +8,15 @@ const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 const config = {
   mode: "development",
   entry: {
-    index: "./src/index.js",
-    another: "./src/another-module.js",
+    index: {
+      import: "./src/index.js",
+      dependOn: ["shared"],
+    },
+    another: {
+      import: "./src/another-module.js",
+      dependOn: ["shared"],
+    },
+    shared: ["lodash", "find-lowest-common-ancestor"],
   },
   output: {
     path: path.resolve(__dirname, "dist"),

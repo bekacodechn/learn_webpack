@@ -179,3 +179,87 @@ entry: {
 
 第一点绝对是问题，因为`lodash`在两个`bundle`中都存在。
 
+## [Prevent Duplication](https://webpack.js.org/guides/code-splitting/#prevent-duplication)
+
+使用`dependOn`创建公共`bundle`，并指定每一个`dependOn`具体包含哪些模块。
+
+1. 两个公共模块`lodash`和`find-lowest-common-ancestor`提取为两个公共`bundle`，`lodash`提取到`shared`，`find-lowest-common-ancestor`提取到`shared2`：
+
+```js
+entry: {
+    index: {
+      import: "./src/index.js",
+      dependOn: ["shared", "shared2"],
+    },
+    another: {
+      import: "./src/another-module.js",
+      dependOn: ["shared", "shared2"],
+    },
+    shared: "lodash",
+    shared2: "find-lowest-common-ancestor",
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].bundle.js",
+  },
+  optimization: {
+    runtimeChunk: "single",
+  },
+```
+
+将生成：
+1. `index.bundle.js`
+2. `another.bundle.js`
+3. `runtime.bundle.js`包含`runtime`代码
+4. `shared.bundle.js`包含`lodash`
+5. `shared2.bundle.js`包含`find-lowest-common-ancestor`
+
+---
+
+2. 两个公共模块`lodash`和`find-lowest-common-ancestor`提取为一个公共`bundle`，`lodash`和`find-lowest-common-ancestor`提取到`shared`：
+
+```js
+  entry: {
+    index: {
+      import: "./src/index.js",
+      dependOn: ["shared"],
+    },
+    another: {
+      import: "./src/another-module.js",
+      dependOn: ["shared"],
+    },
+    shared: ["lodash", "find-lowest-common-ancestor"],
+  },
+```
+
+将生成：
+1. `index.bundle.js`
+2. `another.bundle.js`
+3. `runtime.bundle.js`包含`runtime`代码
+4. `shared.bundle.js`包含`lodash`和`find-lowest-common-ancestor`
+
+---
+
+```js
+  optimization: {
+    runtimeChunk: "single",
+  },
+```
+`runtimeChunk: single`将提取`index.bundle.js`和`another.bundle.js`中公共的`runtime`代码到`runtime.bundle.js`
+
+---
+
+`entry`类型定义：
+```typescript
+	entry?:
+		| string
+		| (() => string | EntryObject | string[] | Promise<EntryStatic>)
+		| EntryObject
+		| string[];
+```
+
+
+
+待定：
+> 虽然 `webpack` 允许每个页面使用多个入口点，但应尽可能避免使用这种方法，而应使用具有多个导入的入口点： `entry：{ page：['./analytics', './app'] }`。这样在使用异步脚本标记时，可以获得更好的优化和一致的执行顺序。
+> 尚不清楚`entry：{ page：['./analytics', './app'] }`效果如何，待补充。
