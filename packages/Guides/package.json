@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "build:stats": "webpack --config webpack.config.js --json > stats.json",
+    "build:preload": "pnpm build && node build/add-prefetch-preload.js",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
     "server": "nodemon ./server.js"

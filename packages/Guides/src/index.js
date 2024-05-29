@@ -13,3 +13,6 @@ async function getComponent() {
 getComponent().then((component) => {
   document.body.appendChild(component);
 });
+
+// import(/*webpackPreload: true*/ "./a.js");
+import(/*webpackPreload: true*/ "./a.js");

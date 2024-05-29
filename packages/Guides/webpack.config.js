@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
+const { StatsWriterPlugin } = require("webpack-stats-plugin");
 
 /**
  * @type { import("webpack").Configuration }
@@ -27,6 +28,12 @@ const config = {
       title: "Development",
     }),
     new WebpackManifestPlugin(),
+    new StatsWriterPlugin({
+      filename: "stats.json",
+      stats: {
+        entrypoints: true,
+      },
+    }),
   ],
 };
 

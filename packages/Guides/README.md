@@ -418,6 +418,42 @@ app.use(async (req, res, next) => {
 `<link charset="utf-8" rel="preload" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
 `<link rel="prefetch" as="script" href="http://localhost:3000/src_b_js.bundle.js">`
 
+### 在 entry生成的 bundle 中使用`import(/*webpackPreload*/)`等 不生效
+
+在`index.js（将生成入口 bundle.js）`定义`import(/*webpackPreload: true*/ "./a.js")`不会将`<link rel="preload" href="a.js"`添加到`index.html`。
+如上面的在`a.js`中定义`import(/*webpackPreload: true */ "./b.js");`则可以。
+
+当在入口代码块中使用预取或预加载时，Webpack 自己不会自动添加相应的 `<link rel="prefetch">` 或 `<link rel="preload">` 标签到 HTML 中。这个任务是由 HTML 生成器（如 html-webpack-plugin）负责的。
+
+为了让`bundle.js`内的`import()`预加载生效，可以分析`webpack`生成`stats.json`，自行将入口`bundle`的`preload asset`添加到`index.html`
+
+1. 通过`webpack-stats-plugin`生成`stats.json`，用于获取`bundle`内的`preload asset`
+2. 将`bundle > preload asset`加入的`index.html`，可使用`cheerio`简化操作。（`cheerio`是`node`端的`jquery`）
+
+### preload/prefetch的资源有效性不同
+
+`preload`的资源只在当前页面有效，如果导航到另一个页面，该资源将无法使用。
+`prefetch`的资源不管是在本页面还是导航后都有效。
+
+### Further Reading
+
+- [<link rel="prefetch/preload" /\> in webpack](https://medium.com/webpack/link-rel-prefetch-preload-in-webpack-51a52358f84c)。很不错。
+
+  1. `webpackPrefetch`除了`true`还接受数字，如`webpackPrefetch: 2`，数字越大越先发起请求。因为多个`webpackPrefetch`会排队，可以用数字控制顺序，`true`相当于0。也接受负值。
+  2. `import()`接收多个魔法注释，它们直接通过`,`逗号分隔。如：
+```js
+import(
+  /* webpackChunkName: "test", webpackPrefetch: true */
+  "LoginModal"
+)
+// or
+import(
+  /* webpackChunkName: "test" */
+  /* webpackPrefetch: true */
+  "LoginModal"
+)
+```
+
 ## Bundle Analysis 捆绑分析
 
 开始拆分代码后，分析输出以检查模块的最终位置会很有用。
