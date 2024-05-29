@@ -1,4 +1,9 @@
 .hello {
   color: red;
-  background: url('./icon.svg');
+  font-family: 'MyFont';
+}
+
+@font-face {
+  font-family: 'MyFont';
+  src: url('./my-font.ttf') format('ttf');
 }
