@@ -27,3 +27,11 @@ https://webpack.js.org/guides/getting-started/#npm-scripts
 1. 当您 `import MyImage from './my-image.png'` 时，该图像将被处理并添加到您的 `output` 目录中 `MyImage`，并且该变量将包含处理后该图像的最终 `URL`。
 2. 使用 `css-loader` 时， `url('./my-image.png')` 在 `CSS` 中也会发生类似的过程。加载程序将识别出这是一个本地文件，并将该 `'./my-image.png'` 路径替换为 `output` 目录中映像的最终路径。
 3. 使用`html-loader`时，`<img src="./my-image.png" />` 以相同的方式处理。
+
+## Loading Data
+
+`xml-loader`，`csv-loader`
+
+`import data from 'xx.json'` 可以直接使用，`webpack`默认支持。
+
+ 命名导入，如`import { name } from 'xx.json'` 会提示: `warning: Should not import the named export 'name' (imported as 'name') from default-exporting module (only default export is available soon)`

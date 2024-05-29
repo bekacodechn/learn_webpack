@@ -1,6 +1,11 @@
 import _ from "lodash";
 import "./style.css";
 import Icon from "./icon.svg";
+import Data from "./data.xml";
+import Notes from "./data.csv";
+import dataJson from "./data.json";
+import { name } from "./data.json";
+
 console.log("Icon", Icon);
 
 function component() {
@@ -14,6 +19,11 @@ function component() {
   myIcon.src = Icon;
 
   element.appendChild(myIcon);
+
+  console.log("xml data", Data);
+  console.log("csv data", Notes);
+  console.log("json data", dataJson);
+  console.log("json name", name);
 
   return element;
 }
