@@ -16,7 +16,7 @@ const config = {
       import: "./src/another-module.js",
       dependOn: ["shared"],
     },
-    shared: ["lodash", "find-lowest-common-ancestor"],
+    shared: ["find-lowest-common-ancestor"],
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -36,6 +36,9 @@ const config = {
   ],
   optimization: {
     runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+    },
   },
 };
 

@@ -263,3 +263,74 @@ entry: {
 待定：
 > 虽然 `webpack` 允许每个页面使用多个入口点，但应尽可能避免使用这种方法，而应使用具有多个导入的入口点： `entry：{ page：['./analytics', './app'] }`。这样在使用异步脚本标记时，可以获得更好的优化和一致的执行顺序。
 > 尚不清楚`entry：{ page：['./analytics', './app'] }`效果如何，待补充。
+
+## [SplitChunksPlugin](https://webpack.js.org/guides/code-splitting/#splitchunksplugin)
+
+`index.js`和`another-module.js`都包含以下模块：
+```js
+import _ from "lodash";
+import find1 from "find-lowest-common-ancestor"
+```
+1. 提取到公共`bundle`
+```js
+entry: {
+    index: {
+      // 和 index: './src/index.js' 相同
+      import: "./src/index.js",
+    },
+    another: {
+      import: "./src/another-module.js",
+    },
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].bundle.js",
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+    },
+  },
+```
+将生成：
+1. `index.bundle.js`
+2. `another.bundle.js`
+3. `runtime.bundle.js`包含`runtime`代码
+4. 公共`bundle`，包含  `lodash`和`find-lowest-common-ancestor`
+
+如果没有`runtimeChunk: "single",`，`runtime`代码会被提取到`公共 bundle`
+
+---
+
+2. 从公共`bundle`只包含`lodash`，`find-lowest-common-ancestor`被提取到`shared`
+
+```js
+entry: {
+    index: {
+      import: "./src/index.js",
+      dependOn: ["shared"],
+    },
+    another: {
+      import: "./src/another-module.js",
+      dependOn: ["shared"],
+    },
+    shared: ["find-lowest-common-ancestor"],
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].bundle.js",
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+    },
+  },
+```
+
+---
+
+其他提取插件：
+
+[mini-css-extract-plugin](https://webpack.js.org/plugins/mini-css-extract-plugin) ：用于将 CSS 从主应用程序中分离出来。
