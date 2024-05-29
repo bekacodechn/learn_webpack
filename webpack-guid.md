@@ -1,0 +1,1 @@
+1. webpack内部“转译”了`import`和`export`，除此之外的代码需要通过`loader`自行转移。[原文](https://webpack.js.org/guides/getting-started/#modules)
