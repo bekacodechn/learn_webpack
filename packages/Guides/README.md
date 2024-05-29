@@ -110,3 +110,27 @@ output: {
 webpack “监视”依赖关系图中的所有文件是否有更改。如果更新了其中一个文件，则代码将重新编译，因此再执行`webpack build`
 
 缺点：需要手动刷新页面。
+
+### [Using webpack-dev-server](https://webpack.js.org/guides/development/#using-webpack-dev-server)
+
+`webpack-dev-server`
+
+```js
+  devServer: {
+   // 告诉 webpack-dev-server 在 dist 启动服务
+    static: './dist',
+  },
+
+  optimization: {
+    runtimeChunk: 'single',
+  },
+```
+
+1. 之所以添加 `optimization.runtimeChunk: 'single'` 是因为在此示例中，我们在单个 HTML 页面上有多个入口点。没有这个，我们可能会遇到[麻烦](https://bundlers.tooling.report/code-splitting/multi-entry/)。有关详细信息，请阅读[代码拆分](https://webpack.js.org/guides/code-splitting/)一章。
+【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`】
+2. `webpack-dev-server `在提供的`output.path`启动服务。
+3. webpack-dev-server doesn't write any output files after compiling. Instead, it keeps bundle files in memory and serves them as if they were real files mounted at the server's root path. If your page expects to find the bundle files on a different path, you can change this with the [devMiddleware.publicPath](https://webpack.js.org/configuration/dev-server/#devserverdevmiddleware) option in the dev server's configuration.
+
+现在更改任何源文件并保存它们，则Web服务器将在编译代码后自动重新加载。
+
+`webpack-dev-server` [可配置的选项。](https://webpack.js.org/configuration/dev-server)

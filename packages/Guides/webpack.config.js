@@ -17,6 +17,10 @@ const config = {
     clean: true,
   },
   devtool: "inline-source-map",
+  devServer: {
+    // 告诉 webpack-dev-server 在 dist 启动服务
+    static: "./dist",
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: "Development",
@@ -25,6 +29,9 @@ const config = {
       basePath: "./aa",
     }),
   ],
+  optimization: {
+    runtimeChunk: "single",
+  },
 };
 
 module.exports = config;
