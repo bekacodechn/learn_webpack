@@ -88,3 +88,13 @@ output: {
 ## The Manifest
 
 [WebpackManifestPlugin](https://github.com/shellscape/webpack-manifest-plugin)生成`bundle`清单到`output`
+
+# [Development](https://webpack.js.org/guides/development/)
+
+## [Using source maps](https://webpack.js.org/guides/development/#using-source-maps)
+
+当 `webpack` 打包源代码时，将错误和警告追踪到其原始位置可能会变得很困难。例如，如果将三个源文件 （ `a.js` 、 `b.js` 和 `c.js` ） 打包到一个包 （ bundle.js ） 中，并且其中一个源文件包含错误，则堆栈跟踪将指向 `bundle.js` 。这没有帮助，因为你想知道错误的确切来源于哪个源文件。
+
+为了更容易地跟踪错误和警告，`JavaScript` 提供了[source maps](http://blog.teamtreehouse.com/introduction-source-maps)，将编译后的代码映射回原始源代码。如果错误源自 `b.js` ，`source map`将准确地告诉你位置。
+
+在开发环境中，使用`inline-source-map`

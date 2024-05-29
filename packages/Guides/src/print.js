@@ -1,3 +1,4 @@
 export default function printMe() {
-  console.log("I get called from print.js!");
+  // console拼写错误，测试 source map
+  cosnole.log("I get called from print.js!");
 }
