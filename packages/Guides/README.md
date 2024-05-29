@@ -334,3 +334,35 @@ entry: {
 其他提取插件：
 
 [mini-css-extract-plugin](https://webpack.js.org/plugins/mini-css-extract-plugin) ：用于将 CSS 从主应用程序中分离出来。
+
+## Dynamic Imports
+
+`import()`动态导入原理：
+将`import()`内的模块提取为单独的`bundle`，并在使用时通过`<script>`添加到`<head>`，待执行完成在删除该`<script>`
+
+动态添加的`lodash script`：
+
+`<script charset="utf-8" data-webpack="basic-setup:chunk-vendors-node_modules_pnpm_lodash_4_17_21_node_modules_lodash_lodash_js" src="http://localhost:8080/vendors-node_modules_pnpm_lodash_4_17_21_node_modules_lodash_lodash_js.bundle.js"></script>`
+
+```js
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+
+async function getComponent() {
+  await sleep(5000);
+  return import("lodash")
+    .then(({ default: _ }) => {
+      const element = document.createElement("div");
+
+      element.innerHTML = _.join(["Hello", "webpack"], " ");
+
+      return element;
+    })
+    .catch((error) => "An error occurred while loading the component");
+}
+
+getComponent().then((component) => {
+  document.body.appendChild(component);
+});
+```
+
+`5s`后动态加载`lodash`，可在代码之后后到`Elements devtool`，并在`<head> element`执行`Break on > subtree modifications`查看查看/移除过程。

@@ -10,13 +10,7 @@ const config = {
   entry: {
     index: {
       import: "./src/index.js",
-      dependOn: ["shared"],
     },
-    another: {
-      import: "./src/another-module.js",
-      dependOn: ["shared"],
-    },
-    shared: ["find-lowest-common-ancestor"],
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -34,12 +28,6 @@ const config = {
     }),
     new WebpackManifestPlugin(),
   ],
-  optimization: {
-    runtimeChunk: "single",
-    splitChunks: {
-      chunks: "all",
-    },
-  },
 };
 
 module.exports = config;

@@ -1,14 +1,18 @@
-import _ from "lodash";
-import find1 from "find-lowest-common-ancestor";
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-function component() {
-  const element = document.createElement("div");
+async function getComponent() {
+  await sleep(5000);
+  return import("lodash")
+    .then(({ default: _ }) => {
+      const element = document.createElement("div");
 
-  element.innerHTML = _.join(["Hello", "webpack"], " ");
+      element.innerHTML = _.join(["Hello", "webpack"], " ");
 
-  console.log("find1", find1);
-
-  return element;
+      return element;
+    })
+    .catch((error) => "An error occurred while loading the component");
 }
 
-document.body.appendChild(component());
+getComponent().then((component) => {
+  document.body.appendChild(component);
+});
