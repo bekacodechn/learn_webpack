@@ -35,3 +35,8 @@ https://webpack.js.org/guides/getting-started/#npm-scripts
 `import data from 'xx.json'` 可以直接使用，`webpack`默认支持。
 
  命名导入，如`import { name } from 'xx.json'` 会提示: `warning: Should not import the named export 'name' (imported as 'name') from default-exporting module (only default export is available soon)`
+
+## Customize parser of JSON modules
+[自定义 JSON 模块的解析器](https://webpack.js.org/guides/asset-management/#customize-parser-of-json-modules)
+
+可以使用自定义解析器而不是特定的 webpack 加载器将任何 `toml`，`yaml` 或 `json5` 文件导入为 `JSON` 模块。
