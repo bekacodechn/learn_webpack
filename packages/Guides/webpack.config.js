@@ -9,13 +9,12 @@ const config = {
   mode: "development",
   entry: {
     index: "./src/index.js",
-    print: "./src/print.js",
+    another: "./src/another-module.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].bundle.js",
     clean: true,
-    publicPath: "/",
   },
   devtool: "inline-source-map",
   devServer: {
@@ -26,12 +25,10 @@ const config = {
     new HtmlWebpackPlugin({
       title: "Development",
     }),
-    new WebpackManifestPlugin({
-      basePath: "./aa",
-    }),
+    new WebpackManifestPlugin(),
   ],
   optimization: {
-    // runtimeChunk: "single",
+    runtimeChunk: "single",
   },
 };
 

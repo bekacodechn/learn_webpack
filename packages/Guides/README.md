@@ -146,3 +146,36 @@ webpack “监视”依赖关系图中的所有文件是否有更改。如果更
 3. 在`package.json`添加`server`命令
 
 发现无法通过`pnpm server`启动，`node server.js`则可以，应该是环境问题。
+
+# [Code Splitting 代码拆分！](https://webpack.js.org/guides/code-splitting/)
+
+1. 允许将代码拆分成不同的`bundle`，然后按需或并行加载
+2. 可用于实现更小的`bundle`
+3. 可用于控制资源加载优先级
+
+三种代码拆分的常规方法：
+
+1. **Entry Points**: Manually split code using [entry](https://webpack.js.org/configuration/entry-context) configuration.
+2. **Prevent Duplication**: Use [Entry dependencies](https://webpack.js.org/configuration/entry-context/#dependencies) or [`SplitChunksPlugin`](https://webpack.js.org/plugins/split-chunks-plugin/) to dedupe and split chunks.
+3. **Dynamic Imports**: Split code via inline function calls within modules.
+
+## Entry Points（不推荐）
+
+```js
+entry: {
+    index: './src/index.js',
+    another: './src/another-module.js',
+  },
+   output: {
+    filename: '[name].bundle.js',
+     path: path.resolve(__dirname, 'dist'),
+   },
+```
+
+目前，`index.js`和`another-module.js`都引用了`lodash`。使用`Entry Points`手动拆分代码有以下问题：
+
+1. 如果入口块之间有任何重复的模块，它们将包含在两个`bundle`中。
+2. 不灵活，不能用于动态拆分具有核心应用程序逻辑的代码。
+
+第一点绝对是问题，因为`lodash`在两个`bundle`中都存在。
+
