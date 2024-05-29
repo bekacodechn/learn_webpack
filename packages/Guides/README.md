@@ -68,3 +68,10 @@ https://webpack.js.org/guides/output-management/
 ```
 
 函数内的内容都被打包进了`index.js`里，`print.bundle.js`里只剩了空函数。
+
+
+## Setting up HtmlWebpackPlugin
+
+`html-webpack-plugin`
+
+默认将所有`bundle`加入到生成的`html`中并为`script`添加`defer`
