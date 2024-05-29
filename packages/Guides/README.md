@@ -127,10 +127,22 @@ webpack “监视”依赖关系图中的所有文件是否有更改。如果更
 ```
 
 1. 之所以添加 `optimization.runtimeChunk: 'single'` 是因为在此示例中，我们在单个 HTML 页面上有多个入口点。没有这个，我们可能会遇到[麻烦](https://bundlers.tooling.report/code-splitting/multi-entry/)。有关详细信息，请阅读[代码拆分](https://webpack.js.org/guides/code-splitting/)一章。
-【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`】
+【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`，（是否正确，待定）】
 2. `webpack-dev-server `在提供的`output.path`启动服务。
 3. webpack-dev-server doesn't write any output files after compiling. Instead, it keeps bundle files in memory and serves them as if they were real files mounted at the server's root path. If your page expects to find the bundle files on a different path, you can change this with the [devMiddleware.publicPath](https://webpack.js.org/configuration/dev-server/#devserverdevmiddleware) option in the dev server's configuration.
 
 现在更改任何源文件并保存它们，则Web服务器将在编译代码后自动重新加载。
 
 `webpack-dev-server` [可配置的选项。](https://webpack.js.org/configuration/dev-server)
+
+### [Using webpack-dev-middleware](https://webpack.js.org/guides/development/#using-webpack-dev-middleware)
+
+`webpack-dev-middleware` 是一个包装器，用于将 `webpack` 处理过的文件发送到服务器。
+
+它在 `webpack-dev-server` 内部使用，但也可以作为一个单独的软件包使用，以便根据需要进行更多自定义设置。本次`commit`将结合`webpack-dev-middleware`和 `express`服务器实现自定义开发环境（具体看代码）。
+
+1. 设置`output.publicPath`为`/`
+2. 在`server.js`中使用`webpack-dev-server`作为`express`的中间件。
+3. 在`package.json`添加`server`命令
+
+发现无法通过`pnpm server`启动，`node server.js`则可以，应该是环境问题。

@@ -15,6 +15,7 @@ const config = {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].bundle.js",
     clean: true,
+    publicPath: "/",
   },
   devtool: "inline-source-map",
   devServer: {
@@ -30,7 +31,7 @@ const config = {
     }),
   ],
   optimization: {
-    runtimeChunk: "single",
+    // runtimeChunk: "single",
   },
 };
 
