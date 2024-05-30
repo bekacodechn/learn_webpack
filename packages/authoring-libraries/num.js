@@ -1,5 +1,5 @@
 import numRef from "./ref.json";
-import reduce from "lodash2/reduce";
+import reduce from "lodash/reduce";
 
 export function wordToNum2(word) {
   return reduce(
