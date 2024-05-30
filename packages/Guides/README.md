@@ -655,3 +655,54 @@ output: {
   // ...
 }
 ```
+
+## 排除库的文件
+
+我们在库里使用`lodash`有多种方式：
+1. `import _ from 'lodash'`
+2. `import reduce from 'lodash/reduce'`
+
+`externals.lodash`只能排除第一种情况：
+```js
+externals: {
+  lodash: {} // 无法排除 'lodash/reduce'
+}
+```
+
+要排除`lodash/reduce`需要单独列出：
+
+```js
+  externals: [
+    {
+      lodash2: {
+        // 如果导入lodash2
+        commonjs: "lodash", //  Node.js 环境中，require('lodash2') 实际上会解析为 require('lodash')。
+        commonjs2: "lodash", //  Node.js 环境中，require('lodash2') 实际上会解析为 require('lodash')。
+        amd: "lodash", //  AMD 环境中，define(['lodash2'], ...) 实际上会解析为 define(['lodash'], ...)。
+        root: "_", // 在 HTML环境， 通过 CDN 引入了 lodash，那么代码中对 _ 的引用会直接使用全局的 _。
+      },
+      // 第一种：
+      "lodash2/reduce": {
+        commonjs: "lodash/reduce",
+        commonjs2: "lodash/reduce",
+        amd: "lodash/reduce",
+        root: ["_", "reduce"],
+      },
+    },
+    // 第二种，但无法从lodash2映射到lodash
+    // /^lodash2\/.+$/,
+  ],
+```
+
+打包结果：
+
+```js
+if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("lodash"), require("lodash/reduce"));
+	else if(typeof define === 'function' && define.amd)
+		define(["lodash", "lodash/reduce"], factory);
+	else if(typeof exports === 'object')
+		exports["webpackNumbers"] = factory(require("lodash"), require("lodash/reduce"));
+	else
+		root["webpackNumbers"] = factory(root["_"], root["_"]["reduce"]);
+```

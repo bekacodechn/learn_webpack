@@ -1,5 +1,6 @@
 import _ from "lodash2";
 import numRef from "./ref.json";
+export { wordToNum2 } from "./num.js";
 
 export function numToWord(num) {
   console.log("this :>> ", this);

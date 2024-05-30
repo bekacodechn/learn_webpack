@@ -1,6 +1,7 @@
-import reduce from "lodash/reduce";
+import numRef from "./ref.json";
+import reduce from "lodash2/reduce";
 
-export function wordToNum(word) {
+export function wordToNum2(word) {
   return reduce(
     numRef,
     (accum, ref) => {
