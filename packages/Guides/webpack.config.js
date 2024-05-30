@@ -1,21 +1,16 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const { StatsWriterPlugin } = require("webpack-stats-plugin");
 
 /**
  * @type { import("webpack").Configuration }
  */
 const config = {
   mode: "development",
-  entry: {
-    index: {
-      import: "./src/index.js",
-    },
-  },
+  entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].bundle.js",
+    filename: "[name].[contenthash].js",
     clean: true,
   },
   devtool: "inline-source-map",
@@ -23,17 +18,23 @@ const config = {
     // 告诉 webpack-dev-server 在 dist 启动服务
     static: "./dist",
   },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Development",
+      title: "Cache",
     }),
     new WebpackManifestPlugin(),
-    new StatsWriterPlugin({
-      filename: "stats.json",
-      stats: {
-        entrypoints: true,
-      },
-    }),
   ],
 };
 

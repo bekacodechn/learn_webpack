@@ -1,3 +1,7 @@
+食用指南？
+
+每个`commit`代表`webpack`文档中的一个或多个小节，按每个`commit`提交顺序学习。
+
 ## Basic Setup
 
 https://webpack.js.org/guides/getting-started/#basic-setup
@@ -89,7 +93,7 @@ output: {
 
 [WebpackManifestPlugin](https://github.com/shellscape/webpack-manifest-plugin)生成`bundle`清单到`output`
 
-# [Development](https://webpack.js.org/guides/development/)
+# Development
 
 ## [Using source maps](https://webpack.js.org/guides/development/#using-source-maps)
 
@@ -125,6 +129,8 @@ webpack “监视”依赖关系图中的所有文件是否有更改。如果更
     runtimeChunk: 'single',
   },
 ```
+
+`optimization.runtimeChunk` 选项将运行时代码拆分为单独的块。将其设置为 `single` 为所有块创建单个运行时包。
 
 1. 之所以添加 `optimization.runtimeChunk: 'single'` 是因为在此示例中，我们在单个 HTML 页面上有多个入口点。没有这个，我们可能会遇到[麻烦](https://bundlers.tooling.report/code-splitting/multi-entry/)。有关详细信息，请阅读[代码拆分](https://webpack.js.org/guides/code-splitting/)一章。
 【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`，（是否正确，待定）】
@@ -437,7 +443,7 @@ app.use(async (req, res, next) => {
 
 ### Further Reading
 
-- [<link rel="prefetch/preload" /\> in webpack](https://medium.com/webpack/link-rel-prefetch-preload-in-webpack-51a52358f84c)。很不错。
+- [<link rel="prefetch/preload" /\> in webpack](https://medium.com/webpack/link-rel-prefetch-preload-in-webpack-51a52358f84c)。推荐阅读。
 
   1. `webpackPrefetch`除了`true`还接受数字，如`webpackPrefetch: 2`，数字越大越先发起请求。因为多个`webpackPrefetch`会排队，可以用数字控制顺序，`true`相当于0。也接受负值。
   2. `import()`接收多个魔法注释，它们直接通过`,`逗号分隔。如：
@@ -453,6 +459,8 @@ import(
   "LoginModal"
 )
 ```
+
+- [Preload, Prefetch And Priorities in Chrome](https://medium.com/reloading/preload-prefetch-and-priorities-in-chrome-776165961bbf) 推荐阅读。
 
 ## Bundle Analysis 捆绑分析
 
@@ -488,3 +496,28 @@ import(
     -  `Webpack` 会将所有的 `chunk` 合并并生成最终的 `bundle`。
     -  **会初始加载，即在`index.html`直接引入。**
 
+# Caching
+
+```js
+output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[contenthash].js",
+    clean: true,
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
+```
+
+1. `[contenthash]` 将根据资产的内容添加唯一的哈希值。
+2. `optimization.runtimeChunk` 选项将运行时代码拆分为单独的块。将其设置为 `single` 为所有块创建单个运行时包
+3. `optimization.splitChunks.cacheGroups`将`node_modules`内的第三方库提取到单独的`vendor`，取名为`vendors`，最终生成`vendors.[contenthash].js`
