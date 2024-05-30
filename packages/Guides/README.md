@@ -706,3 +706,17 @@ if(typeof exports === 'object' && typeof module === 'object')
 	else
 		root["webpackNumbers"] = factory(root["_"], root["_"]["reduce"]);
 ```
+
+## 作为Library，向外提供入口
+
+```json
+  "main": "./dist/webpack-numbers.js",
+  "module": "./index.js",
+  "exports": {
+    "import": "./index.js",
+    "require": "./dist/webpack-numbers.js"
+  },
+```
+
+在`authoring-libraries-test`安装`authoring-libraries`后测试。
+测试目录：`packages/authoring-libraries-test/test`

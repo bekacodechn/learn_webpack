@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/lodash@4.17.21/lodash.js"></script>
+  <script src="../dist/webpack-numbers.js"></script>
+</head>
+
+<body>
+  <script>
+    const r = webpackNumbers.numToWord(3) // numToWord内部的this为webpackNumbers
+    console.log('r :>> ', r);
+
+    const { numToWord } = webpackNumbers
+    // 在 UMD 模块中，this 的上下文取决于模块如何加载和调用。
+    // 在严格模式（strict mode）下，this 在全局作用域中是 undefined。
+    // Webpack 打包生成的代码通常默认使用严格模式，因此在非方法调用（如直接调用函数）中，this 会变成 undefined。
+    console.log('numToWord(3) :>> ', numToWord(3)); // numToWord内部的this 为 undefined
+
+    const r3 = webpackNumbers.wordToNum2("Three");
+    console.log("r3 :>> ", r3)
+  </script>
+</body>
+
+</html>

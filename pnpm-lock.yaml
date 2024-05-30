@@ -76,6 +76,12 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
 
+  packages/authoring-libraries-test:
+    dependencies:
+      authoring-libraries:
+        specifier: workspace:^
+        version: link:../authoring-libraries
+
   packages/course_1: {}
 
   packages/share: {}

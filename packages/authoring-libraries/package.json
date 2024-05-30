@@ -2,10 +2,15 @@
   "name": "authoring-libraries",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "webpack",
     "build:test": "webpack --config webpack.config.test.js"
+  },
+  "main": "./dist/webpack-numbers.js",
+  "module": "./index.js",
+  "exports": {
+    "import": "./index.js",
+    "require": "./dist/webpack-numbers.js"
   },
   "keywords": [],
   "author": "",
