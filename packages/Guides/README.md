@@ -555,7 +555,7 @@ output: {
 
 ----
 
-## 支持UMD
+## [支持UMD](https://webpack.js.org/guides/author-libraries/#expose-the-library)
 
 ```js
 output: {
@@ -572,3 +572,86 @@ output: {
 1. `index.html`通过`<script>`使用，将方法结果出来直接调用，方法内的`this`为`undefined`，因为`webpack`打包的产物默认在严格模式下运行 。
 2. `node-test.js`使用`require()`测试，整体导入还是解构都没问题。
 3. `node-test.mjs`默认导入没问题，但命名导入会报错。【TODO】
+
+## Externalize Lodash
+
+> `pnpm build`查看`externals`后的效果，在`packages/authoring-libraries/test/`目录下测试。
+> 
+> `pnpm build:test`通过打包结果理解`externals`运行结果。
+
+`authoring-libraries`库不应捆绑`lodash`，而是提取到外部。因为使用方可能也有自己的`lodash`，这将导致重复/浪费。
+
+`externals` 配置用于指定哪些模块不需要被打包到输出的文件中，而是从外部环境中获取。这在需要避免将某些大型库（如 `lodash`）打包到输出文件中时非常有用，从而减少打包后的文件大小，并且可以使用外部的 `CDN` 或全局变量来加载这些库。
+
+使用`externals`后`lodash`包需要使用`authoring-libraries`库的一方提供。
+
+
+
+```js
+  output: {
+    // ...
+    globalObject: "this", // 指定全局对象的引用为this
+    library: {
+      name: "webpackNumbers", // 全局变量名称为 webpackNumbers
+      type: "umd", // umd形式导入该库
+    },
+  },
+  externals: {
+    lodash: {
+      commonjs: "lodash",
+      commonjs2: "lodash",
+      amd: "lodash",
+      root: "_",
+    },
+  },
+```
+
+`externals.lodash`会将`lodash`处理为**从外部获取**。为了解释它和`commonjs: "lodash"`的关系，将`externals`改为如下形式（已注释说明）：
+
+```js
+  externals: {
+    lodash2: { // 如果导入lodash2
+      commonjs: "lodash", //  Node.js 环境中，require('lodash2')或 import('lodash2') 实际上会解析为 require('lodash')。
+      commonjs2: "lodash", //  Node.js 环境中，require('lodash2')或 import('lodash2') 实际上会解析为 require('lodash')。
+      amd: "lodash", //  AMD 环境中，define(['lodash2'], ...) 实际上会解析为 define(['lodash'], ...)。
+      root: "_", // 在 HTML环境， 通过 CDN 引入了 lodash，那么代码中对 _ 的引用会直接使用全局的 _。
+    },
+  },
+```
+
+进一步，通过打包结果查看：
+
+```js
+  externals: {
+    lodash2: {
+      // 如果导入lodash2
+      commonjs: "lodash1",
+      commonjs2: "lodash2",
+      amd: "lodash3",
+      root: "_4",
+    },
+  },
+```
+
+在`authoring-libraries`库的`index.js`实际用的是`import _ from "lodash2";`，会匹配`externals.lodash2`。
+
+运行`pnpm build:test`打包结果如下：
+
+```js
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+  // commonjs2 环境
+		module.exports = factory(require("lodash2"));
+	else if(typeof define === 'function' && define.amd)
+  // amd 环境
+		define(["lodash3"], factory);
+	else if(typeof exports === 'object')
+   // commonjs 环境
+		exports["webpackNumbers"] = factory(require("lodash1"));
+	else
+    // 浏览器 环境
+		root["webpackNumbers"] = factory(root["_4"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE_lodash2__) => {
+  // ...
+}
+```

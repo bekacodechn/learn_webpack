@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from "lodash2";
 import numRef from "./ref.json";
 
 export function numToWord(num) {
