@@ -19,6 +19,7 @@ const config = {
     static: "./dist",
   },
   optimization: {
+    moduleIds: "deterministic",
     runtimeChunk: "single",
     splitChunks: {
       cacheGroups: {
