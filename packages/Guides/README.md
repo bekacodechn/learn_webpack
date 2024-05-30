@@ -530,3 +530,27 @@ output: {
 2. `optimization.runtimeChunk` 选项将运行时代码拆分为单独的块。将其设置为 `single` 为所有块创建单个运行时包
 3. `optimization.splitChunks.cacheGroups`将`node_modules`内的第三方库提取到单独的`vendor`，取名为`vendors`，最终生成`vendors.[contenthash].js`
 4. 默认情况下，每个 `module.id` 都是根据解析顺序递增的。这意味着当解析顺序更改时，`ID` 也会更改。因此在`index.js`添加了`print.js`代码后，即使`vendors`内的第三方库的代码没有改变，他的`contenthash`依然会改变（受`ID`变化影响）。为了长期缓存，使用`optimization.moduleIds: 'deterministic'`。*（比较添加`moduleIds: 'deterministic'`前后修改`index.js`是否会影响`vendors`名称。实测下来，即使不添加`moduleIds: 'deterministic'`，`index.js`改变不会影响`vendors`的`contenthash`，可能是`webpack`版本和官方文档使用的不同。）*
+
+# Authoring Libraries 创建库
+
+1. `output.library: webpackNumbers`
+
+```js
+output: {
+    // ...
+    library: "webpackNumbers",
+  },
+```
+
+可通过`<script>`引入，并使用`window.webpackNumbers`：
+
+```html
+<script src="https://example.org/webpack-numbers.js"></script>
+<script>
+  window.webpackNumbers.wordToNum('Five');
+</script>
+```
+
+执行`packages/authoring-libraries/index.html`查看结果。
+
+----

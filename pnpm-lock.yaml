@@ -70,6 +70,12 @@ importers:
         specifier: workspace:^
         version: link:../share
 
+  packages/authoring-libraries:
+    devDependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+
   packages/course_1: {}
 
   packages/share: {}
