@@ -9,7 +9,11 @@ const config = {
     path: path.join(__dirname, "dist"),
     filename: "webpack-numbers.js",
     clean: true,
-    library: "webpackNumbers",
+    globalObject: "this", // 指定全局对象的引用为this
+    library: {
+      name: "webpackNumbers",
+      type: "umd",
+    },
   },
 };
 

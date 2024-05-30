@@ -141,7 +141,7 @@ webpack “监视”依赖关系图中的所有文件是否有更改。如果更
 `optimization.runtimeChunk` 选项将运行时代码拆分为单独的块。将其设置为 `single` 为所有块创建单个运行时包。
 
 1. 之所以添加 `optimization.runtimeChunk: 'single'` 是因为在此示例中，我们在单个 HTML 页面上有多个入口点。没有这个，我们可能会遇到[麻烦](https://bundlers.tooling.report/code-splitting/multi-entry/)。有关详细信息，请阅读[代码拆分](https://webpack.js.org/guides/code-splitting/)一章。
-【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`，（是否正确，待定）】
+【多个`bundle`使用公共`bundle`时，公共`bundle`应该只实例化一次。为了确保这个，使用`runtimeChunk: 'single'`，（是否正确，【todo】）】
 2. `webpack-dev-server `在提供的`output.path`启动服务。
 3. webpack-dev-server doesn't write any output files after compiling. Instead, it keeps bundle files in memory and serves them as if they were real files mounted at the server's root path. If your page expects to find the bundle files on a different path, you can change this with the [devMiddleware.publicPath](https://webpack.js.org/configuration/dev-server/#devserverdevmiddleware) option in the dev server's configuration.
 
@@ -533,7 +533,7 @@ output: {
 
 # Authoring Libraries 创建库
 
-1. `output.library: webpackNumbers`
+## 支持`<script>`引用
 
 ```js
 output: {
@@ -554,3 +554,21 @@ output: {
 执行`packages/authoring-libraries/index.html`查看结果。
 
 ----
+
+## 支持UMD
+
+```js
+output: {
+  globalObject: "this", // 指定全局对象的引用为this
+  library: {
+    name: "webpackNumbers", // 全局变量名称
+    type: "umd", // 支持浏览器，AMD，CommonJs
+  },
+}
+```
+
+在`packages/authoring-libraries/test/`目录下测试：
+
+1. `index.html`通过`<script>`使用，将方法结果出来直接调用，方法内的`this`为`undefined`，因为`webpack`打包的产物默认在严格模式下运行 。
+2. `node-test.js`使用`require()`测试，整体导入还是解构都没问题。
+3. `node-test.mjs`默认导入没问题，但命名导入会报错。【TODO】
